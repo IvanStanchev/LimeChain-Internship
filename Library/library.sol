@@ -13,11 +13,6 @@ contract Library{
         uint copies;
     }
 
-    struct Borrowed{
-        address user;
-        uint _id;
-    }
-
     address public owner;
     address[] public users;
 
