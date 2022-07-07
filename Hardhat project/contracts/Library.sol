@@ -2,7 +2,9 @@
 
 pragma solidity ^0.8.7;
 
-contract Library{
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract Library is Ownable{
     event AddedBook(string name, uint copies);
     event AddedCopies(string name, uint copies);
     event BorrowBook(address user, string name);
@@ -20,11 +22,9 @@ contract Library{
     mapping(address => bool) public userRegistered;
     mapping(uint => Book) public books;
     
-    constructor(address _owner){
-        owner = _owner;
-    }
+    constructor() Ownable() {}
     
-    function addBook(string calldata _name, uint _id, uint _copies) external {
+    function addBook(string calldata _name, uint _id, uint _copies) external onlyOwner{
         require(msg.sender == owner, "Not owner");
         Book storage book = books[_id];
         if(books[_id].copies == 0)
