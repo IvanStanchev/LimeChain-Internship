@@ -13,10 +13,15 @@ contract Library{
         uint copies;
     }
 
+    struct Borrowed{
+        address user;
+        uint _id;
+    }
+
     address public owner;
     address[] public users;
 
-    mapping(address => uint[]) public borrowedBooks;
+    mapping(address => mapping(uint => bool)) public borrowedBooks;
     mapping(address => bool) public userRegistered;
     mapping(uint => Book) public books;
     
@@ -40,20 +45,7 @@ contract Library{
         }
     }
 
-    modifier checkIfBorrowed(uint _id)
-    {
-        uint[] memory _arr = borrowedBooks[msg.sender]; 
-        for(uint i; i< _arr.length; i++)
-        {
-            if(_arr[i] == _id)
-            {
-                revert("Not borrowed");
-            }
-        }
-        _;
-    }
-
-    function borrowBook(uint _id) external checkIfBorrowed(_id) {
+    function borrowBook(uint _id) external {
         Book storage book = books[_id];
         require(book.copies != 0, "Not available");
         
@@ -62,25 +54,20 @@ contract Library{
             userRegistered[msg.sender] = true;
             users.push(msg.sender);
         }
-        uint[] storage arr = borrowedBooks[msg.sender];
         
-        arr.push(_id);
-        book.copies -= 1;
+        if(!borrowedBooks[msg.sender][_id])
+        {
+            borrowedBooks[msg.sender][_id] = true;
+        }
+        
+        book.copies-- ;
         emit BorrowBook(msg.sender, book.name);
     }
     
-    function returnBook(uint _id) external checkIfBorrowed(_id) {
-        uint i;
-        uint[] storage arr = borrowedBooks[msg.sender];
-        while(i < arr.length) 
-        {
-            if(arr[i] == _id)
-            {
-                borrowedBooks[msg.sender][i] = 0;
-                break;
-            }
-            i++;
-        }
+    function returnBook(uint _id) external {
+        require(borrowedBooks[msg.sender][_id], "Not taken"); 
+        borrowedBooks[msg.sender][_id] = false;
+
         Book storage book = books[_id];
         book.copies++;
         emit ReturnBook(msg.sender, book.name);
