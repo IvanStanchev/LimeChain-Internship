@@ -67,4 +67,9 @@ contract Library{
         book.copies++;
         emit ReturnBook(msg.sender, book.name);
     }
+    
+    function returnAllUsers() external view returns(address[] memory)
+    {
+        return users;
+    }
 }
