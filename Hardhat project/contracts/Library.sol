@@ -15,9 +15,7 @@ contract Library is Ownable{
         uint copies;
     }
 
-    address public owner;
     address[] public users;
-
     mapping(address => mapping(uint => bool)) public borrowedBooks;
     mapping(address => bool) public userRegistered;
     mapping(uint => Book) public books;
@@ -25,7 +23,6 @@ contract Library is Ownable{
     constructor() Ownable() {}
     
     function addBook(string calldata _name, uint _id, uint _copies) external onlyOwner{
-        require(msg.sender == owner, "Not owner");
         Book storage book = books[_id];
         if(books[_id].copies == 0)
         {
