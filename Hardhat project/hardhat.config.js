@@ -17,6 +17,10 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
+
+const privatekey1 = process.env.PRIVATE_KEY;
+const etherscanKey = process.env.ETHERSCAN_API_KEY; 
+
 module.exports = {
   solidity: { 
     version: "0.8.7",
@@ -30,10 +34,21 @@ module.exports = {
 
   networks: {
     ropsten: {
-      url: "https://ropsten.infura.io/v3/" + process.env.API_KEY,
-      accounts: [process.env.PRIVATE_KEY]
-    }
-  }
+      url: 'https://ropsten.infura.io/v3/e758deae24994488a643fb8d88b21898',
+      accounts: [privatekey1],
+    },
+  },
+
+  paths: {
+    sources: "./contracts",
+    tests: "./test",
+    cache: "./cache",
+    artifacts: "./artifacts",
+  },
+
+  mocha: {
+    timeout : 20000,
+  },
 
 };
 
