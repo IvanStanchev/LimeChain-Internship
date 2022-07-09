@@ -59,7 +59,6 @@ describe("Library", function () {
     })
 
     it("Should have only one user in this test case", async function(){
-      const addrs = ["0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"];
       const users = await library.returnAllUsers();
       await expect(users.length)
       .to.equal(1);
