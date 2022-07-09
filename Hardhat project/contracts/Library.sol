@@ -19,15 +19,17 @@ contract Library is Ownable{
     mapping(address => mapping(uint => bool)) public borrowedBooks;
     mapping(address => bool) public userRegistered;
     mapping(uint => Book) public books;
-    
+    uint[] public allBookIds; 
+
     constructor() Ownable() {}
     
     function addBook(string calldata _name, uint _id, uint _copies) external onlyOwner{
         Book storage book = books[_id];
-        if(books[_id].copies == 0)
+        if((book.copies == 0) && (bytes(book.name).length == 0))
         {
             book.name = _name;
             book.copies = _copies;
+            allBookIds.push(_id);
             emit AddedBook(_name, _copies);
         }   
         else
@@ -35,6 +37,10 @@ contract Library is Ownable{
             book.copies += _copies;
             emit AddedCopies(_name, _copies);
         }
+    }
+    function getAllBookIds() public view returns (uint[] memory){
+        require(allBookIds.length != 0, "There are no books");
+        return(allBookIds);
     }
 
     function borrowBook(uint _id) external {
