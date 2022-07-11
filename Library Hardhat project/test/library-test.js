@@ -22,6 +22,13 @@ describe("Library", function () {
       .withArgs("New book", 1)      
     });
 
+    it("Should return all book ids", async () => {
+      await library.addBook("New book", 4, 1);
+      const ids = await library.getAllBookIds();
+      await expect(ids[0])
+      .to.equal(4);
+    })
+
     it("Should add a second copy of the added book and emit an event with the name and the number of copies", async function(){
       await expect(library.addBook("New book", 4, 6))
       .to.emit(library, "AddedCopies")
@@ -63,7 +70,4 @@ describe("Library", function () {
       await expect(users.length)
       .to.equal(1);
     } )
-
-    
-     
 });
