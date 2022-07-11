@@ -4,7 +4,7 @@ const USElection = require('./../artifacts/contracts/Election.sol/USElection.jso
 const run = async function() {
 		const provider = new hre.ethers.providers.InfuraProvider("ropsten", "40c2813049e44ec79cb4d7e0d18de173")
 		
-		const wallet = new hre.ethers.Wallet("d9c7740f303fe5ede2e6f730bdcc382aec0c9e3dda25058c0ded5c1810f504dc", provider)
+		const wallet = new hre.ethers.Wallet(process.env.PRIVATE_KEY, provider)
 		const balance = await wallet.getBalance();
 	
 		const electionContract = new hre.ethers.Contract("0xF090551DEA62866c127eaF710f7dd839377C926d", USElection.abi, wallet)
